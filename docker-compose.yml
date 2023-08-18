@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  gestion-employe-app:
+    image: gestion-employe-app
+    container_name: gestion-employe-app
+    restart: unless-stopped
+    ports:
+      - 9090:8080
+    depends_on:
+      - gestion-employe-db
+    environment:
+      - spring.datasource.url=jdbc:mysql://gestion-employe-db:3306/tasks?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+      - spring.datasource.username=root
+      - spring.datasource.password=Fouzo@09
+    networks:
+      - gestion-employe-network
+
+  gestion-employe-db:
+    image: mysql
+    container_name: gestion-employe-db
+    environment:
+      MYSQL_ROOT_PASSWORD: Fouzo@09
+    networks:
+      - gestion-employe-network
+    volumes:
+      - gestion-employe-db-data:/data/db
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+networks:
+  gestion-employe-network:
+    driver: bridge
+
+volumes:
+  gestion-employe-db-data:
